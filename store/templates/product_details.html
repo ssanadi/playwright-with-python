@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Details</title>
+</head>
+<body>
+    <a href="{{ url_for('view_cart') }}" data-testid="view-cart-link">View Cart</a> <!-- Add this line -->
+    <h1 data-testid="product-details-page-header">{{ product.name }}</h1>
+    <p data-testid="product-description-para">{{ product.description }}</p>
+    <p><a href="{{ url_for('add_to_cart', product_id=product.id) }}" data-testid="add-to-cart-link">Add to Cart</a></p>
+</body>
+</html>

@@ -1,0 +1,64 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    # Step 3: Install Pipenv and Flask dependencies
+    - name: Install Flask and Pipenv dependencies
+      run: |
+        pip install pipenv
+        pipenv install
+        pipenv install flask
+        pipenv run playwright install chromium --with-deps
+
+    # Step 5: Start Flask app in background
+    - name: Start Flask app
+      run: |
+        cd store
+        pipenv run python app.py &
+        sleep 5  # Give Flask some time to start
+
+    # Step 4: Wait for Flask to start
+    - name: Wait for Flask to start
+      run: |
+        for i in {1..20}; do
+            curl -s http://127.0.0.1:5000/ && break || sleep 5;
+        done
+
+    # Step 5: Debug Flask server
+    - name: Debug Flask server
+      run: curl -v http://127.0.0.1:5000/
+
+    # Step 7: Run Playwright tests
+    - name: Run Playwright tests
+      env:
+        PASSWORD: ${{secrets.PASSWORD}}
+      run: |
+        pipenv run python -m pytest --html=reports/report.html --self-contained-html -n auto --base-url=http://127.0.0.1:5000
+      continue-on-error: true
+
+    # Step 8: Upload test report (optional)
+    - name: Upload HTML Report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: Playwright-Test-Report
+        path: ./reports/

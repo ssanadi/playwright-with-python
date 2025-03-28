@@ -1,0 +1,3 @@
+Pipfile.lock
+*.pyc
+secret_config.py
