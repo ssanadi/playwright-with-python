@@ -44,7 +44,7 @@ This repository contains an end-to-end automated test suite for a sample web app
 1. Clone the repository:
    ```sh
    git clone <repository-url>
-   cd tablecheck-qa-automation-take-home
+   cd playwright-with-python
 
 2. Install dependencies:
    ```sh
@@ -58,7 +58,7 @@ This repository contains an end-to-end automated test suite for a sample web app
 
 4. Set up environment variables in tests\config\secret_config.py file:
       ```env
-      PASSWORD=application password
+      PASSWORD=<application password>
 
 5. Run all tests parallelly using:
    ```sh
